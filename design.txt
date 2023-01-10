@@ -4,6 +4,5 @@ Models
 APIs
 - add new code snippet [x]
 - mark snippet as hot or not [x]
-- get two random code snippets [ ]
-- get code snippet's score [ ]
-
+- get two random code snippets [x]
+- get code snippet's score [x]

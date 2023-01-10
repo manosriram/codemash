@@ -12,3 +12,6 @@ class SnippetSerializer(serializers.ModelSerializer):
     class Meta:
         model = Snippet
         fields = "__all__"
+
+#  class RandomSnippetSerializer(serializers.ModelSerializer):
+    #  code = serializers.CharField()
