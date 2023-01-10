@@ -1,0 +1,9 @@
+Models
+- Snippet
+
+APIs
+- mark snippet as hot or not
+- add new code snippet
+- get two random code snippets conditionally
+- get code snippet's score
+
