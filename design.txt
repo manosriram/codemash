@@ -1,9 +1,9 @@
 Models
-- Snippet
+- Snippet [x]
 
 APIs
-- mark snippet as hot or not
-- add new code snippet
-- get two random code snippets conditionally
-- get code snippet's score
+- add new code snippet [x]
+- mark snippet as hot or not [x]
+- get two random code snippets [ ]
+- get code snippet's score [ ]
 
