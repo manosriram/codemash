@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+  </head>
+  <body>
+    {% include 'app/nav.html' %}
+    <form action="/snippet/" method="POST">
+      <div class="max-w-2xl mx-auto">
+        <label
+          for="message"
+          class="block mb-2 text-sm font-medium text-black-900 dark:text-black-400"
+          >Add your own code snippet</label
+        >
+        <textarea
+          name="code"
+          id="message"
+          rows="10"
+          class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          placeholder="Code Snippet"
+        ></textarea>
+        <br />
+
+        <input
+          type="text"
+          class="mb-6 bg-gray-100 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-50 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-gray-400 dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          name="author"
+          placeholder="Your Name"
+        />
+        <button
+          class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-4 rounded inline-flex items-center"
+          onclick="submit"
+        >
+          <span>Add</span>
+        </button>
+        <br />
+        <br />
+
+        {% if message %}
+        <div role="alert">
+          <div class="bg-green-500 text-white font-bold rounded-t px-4 py-2">
+            Success
+          </div>
+          <div
+            class="border border-t-0 border-green-400 rounded-b bg-green-100 px-4 py-3 text-green-700"
+          >
+            <p>{{ message }}</p>
+          </div>
+        </div>
+        {% endif %}
+
+        <script src="https://unpkg.com/flowbite@1.4.0/dist/flowbite.js"></script>
+      </div>
+    </form>
+  </body>
+</html>

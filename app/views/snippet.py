@@ -1,5 +1,7 @@
 from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Func, F
+from django.shortcuts import render
+from django.shortcuts import redirect
 
 from rest_framework.response import Response
 from rest_framework.views import APIView
@@ -14,14 +16,25 @@ import random
 
 K = 25
 
+class UploadSnippetPageView(APIView):
+    def get(self, request):
+        return render(request, "app/snippet.html")
+
 class SnippetView(APIView):
+
+    def view_404(self, request, exception=None):
+        return redirect('home')
+
+    def nav(self ,request):
+        print("hit")
+        return render(request, "app/nav.html")
 
     def get_two_random_snippets(self):
         snippets = Snippet.objects.all()
         snippet_one = random.choice(snippets)
         snippet_two = random.choice(snippets)
 
-        while snippet_one == snippet_two:
+        while snippet_one == snippet_two and snippet_one.code == snippet_two.code:
             snippet_two = random.choice(snippets)
 
         return [snippet_one, snippet_two]
@@ -41,7 +54,12 @@ class SnippetView(APIView):
         snippets = self.get_two_random_snippets()
         serializer = SnippetSerializer(snippets,  many=True)
 
-        return Response({ "snippets": serializer.data })
+        data = []
+        for x in serializer.data:
+            data.append(dict(x))
+            #  print(x)
+        #  print(data)
+        return render(request, "app/home.html", {"snippet_one": data[0], "snippet_two": data[1] })
 
 
     def post(self, request):
@@ -50,7 +68,8 @@ class SnippetView(APIView):
             author = request.data["author"]
 
             Snippet.objects.create(code=code, author=author)
-            return Response({ "message": "snippet created" })
+            return render(request, "app/snippet.html", {"message": "snippet created" })
+            #  return Response({ "message": "snippet created" })
         except Exception as e:
             print(e)
             return Response({ "message": "some error occured" })
@@ -80,7 +99,7 @@ class UpdateSnippet(APIView):
             Snippet.objects.filter(id=hot).update(score=hot_snippet_score)
             Snippet.objects.filter(id=nt).update(score=not_snippet_score)
 
-            return Response({ "message": "updated snippets", "hot": hot_snippet_score, "not": not_snippet_score })
+            return Response({ "message": "updated snippets", "hot": {"score": hot_snippet_score, "id": hot_snippet.id }, "not": {"score": not_snippet_score, "id": not_snippet.id } })
 
         except ObjectDoesNotExist as e:
             print(e)

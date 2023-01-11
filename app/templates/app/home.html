@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>codemash</title>
+    <link
+      rel="stylesheet"
+      href="https://use.fontawesome.com/releases/v5.15.1/css/all.css"
+      integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp"
+      crossorigin="anonymous"
+    />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css"
+    />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script>
+      hljs.highlightAll();
+    </script>
+  </head>
+  <style>
+    .card-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 90vh;
+    }
+
+    .card {
+      width: 45%;
+      height: 400px;
+      margin: 0px 10px;
+      display: hidden;
+    }
+
+    .hot {
+      background: #38cc77;
+    }
+
+    .not {
+      background: #ff6263;
+    }
+
+    pre {
+      white-space: pre-wrap; /* Since CSS 2.1 */
+      white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+      white-space: -pre-wrap; /* Opera 4-6 */
+      white-space: -o-pre-wrap; /* Opera 7 */
+      word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+  </style>
+  <body>
+    {% include 'app/nav.html' %}
+    <div
+      class="fixed bottom-0 p-4 m-4 bg-blue-500 text-white flex"
+      id="toaster"
+    >
+      <p class="text-center flex-1">
+        Tip: Use Left and Right keys to select a Card.
+        <i id="close-toaster" class="fa fa-times" aria-hidden="true"></i>
+      </p>
+    </div>
+
+    <div class="card-container">
+      <div class="card" onclick="select_card(this)" id="{{snippet_one.id}}">
+        <pre>
+					{{snippet.id}}
+					<code>
+						{{snippet_one.code}}
+					</code>
+				</pre>
+      </div>
+      <div class="card" onclick="select_card(this)" id="{{snippet_two.id}}">
+        <pre>
+					{{snippet.id}}
+					<code>
+						{{snippet_two.code}}
+					</code>
+				</pre>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    var closeButton = document.getElementById("close-toaster");
+    var toaster = document.getElementById("toaster");
+
+    closeButton.addEventListener("click", function () {
+      toaster.classList.add("hidden");
+    });
+
+    function update_snippets(data) {
+      fetch("http://localhost:8000/snippet/update/", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((response_data) => {
+          hot = response_data.hot;
+          not = response_data.not;
+
+          const hot_id = `#${CSS.escape(hot.id)}`;
+          const not_id = `#${CSS.escape(not.id)}`;
+
+          const hot_el = document.querySelector(hot_id);
+          const not_el = document.querySelector(not_id);
+
+          if (hot.score >= not.score) {
+            hot_el.getElementsByTagName("pre")[0].classList.add("hot");
+            not_el.getElementsByTagName("pre")[0].classList.add("not");
+          } else {
+            hot_el.getElementsByTagName("pre")[0].classList.add("not");
+            not_el.getElementsByTagName("pre")[0].classList.add("hot");
+          }
+        })
+        .then(() => {
+          setTimeout(() => {
+            location.reload();
+          }, 1000);
+        })
+        .catch((error) => console.error(error));
+    }
+
+    function select_card(e) {
+      const cards = document.querySelectorAll(".card");
+      const data = {
+        hot: e.id,
+        not: e.id == cards[0].id ? cards[1].id : cards[0].id,
+      };
+      update_snippets(data);
+    }
+    document.addEventListener("keydown", function (event) {
+      if (event.keyCode === 37) {
+        // Left arrow key pressed
+        leftKeyPressed();
+      } else if (event.keyCode === 39) {
+        // Right arrow key pressed
+        rightKeyPressed();
+      }
+    });
+
+    function leftKeyPressed() {
+      const cards = document.querySelectorAll(".card");
+      const data = {
+        hot: cards[0].id,
+        not: cards[1].id,
+      };
+
+      update_snippets(data);
+    }
+
+    function rightKeyPressed() {
+      const cards = document.querySelectorAll(".card");
+      const data = {
+        hot: cards[1].id,
+        not: cards[0].id,
+      };
+
+      update_snippets(data);
+    }
+  </script>
+</html>
