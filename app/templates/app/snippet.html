@@ -7,6 +7,7 @@
   <body>
     {% include 'app/nav.html' %}
     <form action="/" method="POST">
+      {% csrf_token %}
       <div class="max-w-2xl mx-auto">
         <label
           for="message"
