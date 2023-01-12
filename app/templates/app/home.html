@@ -137,7 +137,7 @@
 
     function update_snippets(data) {
       const url = window.location.href;
-      fetch(`${url}/snippet/update/`, {
+      fetch(`${url}snippet/update/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
