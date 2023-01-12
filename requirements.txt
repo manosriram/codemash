@@ -1,7 +1,5 @@
 appdirs==1.4.4
 asgiref==3.6.0
-carbon-api==0.1
-carbonsh==0.2.0
 certifi==2022.12.7
 Django==4.1.5
 django-cors-headers==3.13.0
@@ -15,4 +13,3 @@ termcolor==2.2.0
 tqdm==4.64.1
 urllib3==1.26.13
 websockets==10.4
-zipp==3.11.0
