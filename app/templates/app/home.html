@@ -33,15 +33,17 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+    <script
+      src="https://kit.fontawesome.com/03f657a0b0.js"
+      crossorigin="anonymous"
+    ></script>
 
     <link
       rel="stylesheet"
       href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css"
     />
     <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
-    <script>
-      hljs.highlightAll();
-    </script>
+    <script></script>
   </head>
   <style>
     .card-container {
@@ -53,13 +55,23 @@
 
     .card {
       width: 45%;
-      height: 400px;
       margin: 0px 10px;
       display: hidden;
+      position: relative;
+    }
+
+    .hot-icon {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 25rem;
+      color: #e25822;
+      z-index: 99;
+      display: none;
     }
 
     .hot {
-      background: #38cc77;
     }
 
     .not {
@@ -67,14 +79,17 @@
     }
 
     pre {
-      white-space: pre-wrap; /* Since CSS 2.1 */
-      white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
-      white-space: -pre-wrap; /* Opera 4-6 */
-      white-space: -o-pre-wrap; /* Opera 7 */
-      word-wrap: break-word; /* Internet Explorer 5.5+ */
+    }
+
+    code {
+      min-height: 50vh;
+      white-space: pre; /* Since CSS 2.1 */
+      white-space: -moz-pre; /* Mozilla, since 1999 */
+      white-space: -pre; /* Opera 4-6 */
+      white-space: -o-pre; /* Opera 7 */
     }
   </style>
-  <body>
+  <body onload="hightlightElements()">
     {% include 'app/nav.html' %}
     <div
       class="fixed bottom-0 p-4 m-4 bg-blue-500 text-white flex"
@@ -88,20 +103,23 @@
 
     <div class="card-container">
       <div class="card" onclick="select_card(this)" id="{{snippet_one.id}}">
-        <pre>
-					{{snippet.id}}
-					<code>
-						{{snippet_one.code}}
-					</code>
-				</pre>
+        <pre id="code">
+				<code>{{snippet_one.code}}</code>
+				</pre
+        >
+        <div id="left" class="hot-icon">
+          <i class="fa-solid fa-fire"></i>
+        </div>
       </div>
       <div class="card" onclick="select_card(this)" id="{{snippet_two.id}}">
-        <pre>
-					{{snippet.id}}
-					<code>
-						{{snippet_two.code}}
-					</code>
-				</pre>
+        <pre id="code">
+				<code>{{snippet_two.code}}</code>
+				</pre
+        >
+
+        <div id="right" class="hot-icon">
+          <i class="fa-solid fa-fire"></i>
+        </div>
       </div>
     </div>
   </body>
@@ -109,13 +127,17 @@
   <script>
     var closeButton = document.getElementById("close-toaster");
     var toaster = document.getElementById("toaster");
+    window.onload = function () {
+      hljs.highlightAll();
+    };
 
     closeButton.addEventListener("click", function () {
       toaster.classList.add("hidden");
     });
 
     function update_snippets(data) {
-      fetch("http://localhost:8000/snippet/update/", {
+      const url = window.location.href;
+      fetch(`${url}/snippet/update/`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(data),
@@ -132,11 +154,13 @@
           const not_el = document.querySelector(not_id);
 
           if (hot.score >= not.score) {
-            hot_el.getElementsByTagName("pre")[0].classList.add("hot");
-            not_el.getElementsByTagName("pre")[0].classList.add("not");
+            hot_el
+              .getElementsByTagName("pre")[0]
+              .parentElement.querySelector(".hot-icon").style.display = "block";
           } else {
-            hot_el.getElementsByTagName("pre")[0].classList.add("not");
-            not_el.getElementsByTagName("pre")[0].classList.add("hot");
+            not_el
+              .getElementsByTagName("pre")[0]
+              .parentElement.querySelector(".hot-icon").style.display = "block";
           }
         })
         .then(() => {

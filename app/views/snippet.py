@@ -1,4 +1,5 @@
 from django.core.exceptions import ObjectDoesNotExist
+
 from django.db.models import Func, F
 from django.shortcuts import render
 from django.shortcuts import redirect
@@ -82,8 +83,8 @@ class GetSnippet(generics.RetrieveAPIView):
 class UpdateSnippet(APIView):
     def put(self, request, *args, **kwargs):
         try:
-            hot = request.data["hot"]
-            nt = request.data["not"]
+            hot = int(request.data["hot"])
+            nt = int(request.data["not"])
             
             hot_snippet = Snippet.objects.get(id=hot)
             not_snippet = Snippet.objects.get(id=nt)
