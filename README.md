@@ -1,3 +1,3 @@
 ```codemash```
 
-vote for the hottest code snippet.
+Vote for the hottest code snippet.
