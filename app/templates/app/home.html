@@ -125,6 +125,7 @@
   </body>
 
   <script>
+    var selected = false;
     var closeButton = document.getElementById("close-toaster");
     var toaster = document.getElementById("toaster");
     window.onload = function () {
@@ -137,55 +138,66 @@
 
     function update_snippets(data) {
       const url = window.location.href;
-      fetch(`${url}snippet/update/`, {
-        method: "PUT",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(data),
-      })
-        .then((response) => response.json())
-        .then((response_data) => {
-          hot = response_data.hot;
-          not = response_data.not;
-
-          const hot_id = `#${CSS.escape(hot.id)}`;
-          const not_id = `#${CSS.escape(not.id)}`;
-
-          const hot_el = document.querySelector(hot_id);
-          const not_el = document.querySelector(not_id);
-
-          if (hot.score >= not.score) {
-            hot_el
-              .getElementsByTagName("pre")[0]
-              .parentElement.querySelector(".hot-icon").style.display = "block";
-          } else {
-            not_el
-              .getElementsByTagName("pre")[0]
-              .parentElement.querySelector(".hot-icon").style.display = "block";
-          }
+      if (!selected) {
+        selected = true;
+        fetch(`${url}snippet/update/`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(data),
         })
-        .then(() => {
-          setTimeout(() => {
-            location.reload();
-          }, 1000);
-        })
-        .catch((error) => console.error(error));
+          .then((response) => response.json())
+          .then((response_data) => {
+            hot = response_data.hot;
+            not = response_data.not;
+
+            const hot_id = `#${CSS.escape(hot.id)}`;
+            const not_id = `#${CSS.escape(not.id)}`;
+
+            const hot_el = document.querySelector(hot_id);
+            const not_el = document.querySelector(not_id);
+
+            if (hot.score >= not.score) {
+              hot_el
+                .getElementsByTagName("pre")[0]
+                .parentElement.querySelector(".hot-icon").style.display =
+                "block";
+            } else {
+              not_el
+                .getElementsByTagName("pre")[0]
+                .parentElement.querySelector(".hot-icon").style.display =
+                "block";
+            }
+          })
+          .then(() => {
+            setTimeout(() => {
+              location.reload();
+            }, 1000);
+          })
+          .catch((error) => console.error(error));
+      }
     }
 
     function select_card(e) {
-      const cards = document.querySelectorAll(".card");
-      const data = {
-        hot: e.id,
-        not: e.id == cards[0].id ? cards[1].id : cards[0].id,
-      };
-      update_snippets(data);
+      if (!selected) {
+        const cards = document.querySelectorAll(".card");
+        const data = {
+          hot: e.id,
+          not: e.id == cards[0].id ? cards[1].id : cards[0].id,
+        };
+        update_snippets(data);
+      }
     }
     document.addEventListener("keydown", function (event) {
       if (event.keyCode === 37) {
         // Left arrow key pressed
         leftKeyPressed();
+        event.preventDefault();
+        return false;
       } else if (event.keyCode === 39) {
         // Right arrow key pressed
         rightKeyPressed();
+        event.preventDefault();
+        return false;
       }
     });
 
