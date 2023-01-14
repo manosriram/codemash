@@ -138,43 +138,41 @@
 
     function update_snippets(data) {
       const url = window.location.href;
-      if (!selected) {
-        selected = true;
-        fetch(`${url}snippet/update/`, {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(data),
+      if (selected) return false;
+
+      selected = true;
+      fetch(`${url}snippet/update/`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
+      })
+        .then((response) => response.json())
+        .then((response_data) => {
+          hot = response_data.hot;
+          not = response_data.not;
+
+          const hot_id = `#${CSS.escape(hot.id)}`;
+          const not_id = `#${CSS.escape(not.id)}`;
+
+          const hot_el = document.querySelector(hot_id);
+          const not_el = document.querySelector(not_id);
+
+          if (hot.score >= not.score) {
+            hot_el
+              .getElementsByTagName("pre")[0]
+              .parentElement.querySelector(".hot-icon").style.display = "block";
+          } else {
+            not_el
+              .getElementsByTagName("pre")[0]
+              .parentElement.querySelector(".hot-icon").style.display = "block";
+          }
         })
-          .then((response) => response.json())
-          .then((response_data) => {
-            hot = response_data.hot;
-            not = response_data.not;
-
-            const hot_id = `#${CSS.escape(hot.id)}`;
-            const not_id = `#${CSS.escape(not.id)}`;
-
-            const hot_el = document.querySelector(hot_id);
-            const not_el = document.querySelector(not_id);
-
-            if (hot.score >= not.score) {
-              hot_el
-                .getElementsByTagName("pre")[0]
-                .parentElement.querySelector(".hot-icon").style.display =
-                "block";
-            } else {
-              not_el
-                .getElementsByTagName("pre")[0]
-                .parentElement.querySelector(".hot-icon").style.display =
-                "block";
-            }
-          })
-          .then(() => {
-            setTimeout(() => {
-              location.reload();
-            }, 300);
-          })
-          .catch((error) => console.error(error));
-      }
+        .then(() => {
+          setTimeout(() => {
+            location.reload();
+          }, 300);
+        })
+        .catch((error) => console.error(error));
     }
 
     function select_card(e) {
