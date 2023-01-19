@@ -21,6 +21,12 @@ class UploadSnippetPageView(APIView):
     def get(self, request):
         return render(request, "app/snippet.html")
 
+class RankSnippetPageView(APIView):
+    def get(self, request):
+        snippets = Snippet.objects.order_by("-score")
+        return render(request, "app/ranking.html", {"snippets": snippets })
+
+
 class SnippetView(APIView):
 
     def view_404(self, request, exception=None):

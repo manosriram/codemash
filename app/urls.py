@@ -11,6 +11,7 @@ urlpatterns = [
         path('snippet/<int:pk>/', snippet.GetSnippet.as_view()),
         path('snippet/update/', snippet.UpdateSnippet.as_view()),
         path('upload/', snippet.UploadSnippetPageView.as_view()),
+        path('ranks/', snippet.RankSnippetPageView.as_view()),
         #  path('<path:path>', lambda request, path: redirect('/', permanent=False)),
 ]
 

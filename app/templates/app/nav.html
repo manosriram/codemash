@@ -6,10 +6,23 @@
     <meta charset="UTF-8" />
     <title>codemash</title>
   </head>
+  <style>
+    nav {
+      display: flex; /* use flexbox to align items horizontally */
+      justify-content: space-between; /* add space between items */
+    }
+
+    nav a {
+      margin-right: 20px;
+    }
+  </style>
   <body>
     <nav class="flex items-center justify-between flex-wrap bg-red-900 p-6">
       <div class="flex items-center flex-shrink-0 text-white mr-6">
         <a href="/" class="font-semibold text-xl tracking-tight">codemash</a>
+        <h2>
+          <a href="/ranks">ranking</a>
+        </h2>
       </div>
     </nav>
   </body>

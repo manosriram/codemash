@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title></title>
+    <link
+      rel="stylesheet"
+      href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css"
+    />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+  </head>
+  <style>
+    .container {
+      display: flex;
+      flex-wrap: wrap;
+    }
+
+    .box {
+      flex: 1;
+      height: auto;
+      margin: 10px;
+      flex-basis: 50%;
+      padding: 10px;
+    }
+
+    code {
+      white-space: pre; /* Since CSS 2.1 */
+      white-space: -moz-pre; /* Mozilla, since 1999 */
+      white-space: -pre; /* Opera 4-6 */
+      white-space: -o-pre; /* Opera 7 */
+    }
+  </style>
+  <body>
+    {% include 'app/nav.html' %}
+    <div class="container">
+      {% for snippet in snippets %}
+      <div class="box">
+        <h2><u>Rank</u> <strong>{{forloop.counter}}</strong></h2>
+        <h2><u>Score</u> <strong>{{snippet.score}}</strong></h2>
+
+        <pre><code>{{snippet.code}}</code></pre>
+      </div>
+      {% endfor %}
+    </div>
+  </body>
+  <script>
+    window.onload = function () {
+      hljs.highlightAll();
+    };
+  </script>
+</html>
